@@ -1,8 +1,8 @@
-use std::collections::hash_map::{HashMap, RandomState};
+use std::collections::hash_map::HashMap;
 
 #[derive(Debug, PartialEq)]
 pub struct Lookup<T: Named> {
-    map: HashMap<String, usize, RandomState>,
+    map: HashMap<String, usize>,
     items: Vec<T>,
 }
 
