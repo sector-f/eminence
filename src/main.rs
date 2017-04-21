@@ -1,5 +1,5 @@
 mod hash;
-mod lookup;
+pub mod lookup;
 
 fn main() {
     println!("Hello, world!");
