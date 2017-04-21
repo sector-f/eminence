@@ -82,6 +82,10 @@ impl<T: Named> Lookup<T> {
 
         Ok(())
     }
+
+    pub fn len(&self) -> usize {
+        self.items.len()
+    }
 }
 
 pub trait Named {
