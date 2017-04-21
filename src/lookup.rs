@@ -6,21 +6,28 @@ pub struct Lookup<T> {
 }
 
 impl<T: Named> Lookup<T> {
-    fn from_name(&self, name: &str) -> Option<&T> {
+    pub fn new() -> Self {
+        Lookup {
+            map: HashMap::new(),
+            items: Vec::new(),
+        }
+    }
+
+    pub fn insert(&mut self, item: T) {
+        let name = item.name().to_owned();
+        self.items.push(item);
+        self.map.insert(name, self.items.len());
+    }
+
+    pub fn get_by_name(&self, name: &str) -> Option<&T> {
         match self.map.get(name) {
             Some(index) => { self.items.get(index.clone()) }
             None => { None },
         }
     }
 
-    fn from_index(&self, index: usize) -> Option<&T> {
+    pub fn get_by_index(&self, index: usize) -> Option<&T> {
         self.items.get(index)
-    }
-
-    fn insert(&mut self, item: T) {
-        let name = item.name().to_owned();
-        self.items.push(item);
-        self.map.insert(name, self.items.len());
     }
 }
 
