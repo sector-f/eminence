@@ -1,12 +1,12 @@
-use lookup::{Lookup, Named};
+use named_vec::{NamedVec, Named};
 
 struct WmRoot {
-    monitors: Lookup<Monitor>,
+    monitors: NamedVec<Monitor>,
 }
 
 struct Monitor {
     name: String,
-    workspaces: Lookup<Workspace>,
+    workspaces: NamedVec<Workspace>,
 }
 
 struct Workspace {

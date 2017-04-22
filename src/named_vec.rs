@@ -1,14 +1,14 @@
 use std::collections::hash_map::HashMap;
 
 #[derive(Debug, PartialEq)]
-pub struct Lookup<T: Named> {
+pub struct NamedVec<T: Named> {
     map: HashMap<String, usize>,
     items: Vec<T>,
 }
 
-impl<T: Named> Lookup<T> {
+impl<T: Named> NamedVec<T> {
     pub fn new() -> Self {
-        Lookup {
+        NamedVec {
             map: HashMap::new(),
             items: Vec::new(),
         }
@@ -66,7 +66,7 @@ pub trait Named {
 
 #[cfg(test)]
 mod tests {
-    use lookup::*;
+    use named_vec::*;
 
     #[derive(Debug, PartialEq)]
     struct Item {
@@ -89,23 +89,23 @@ mod tests {
 
     #[test]
     fn indexes() {
-        let mut lookup = Lookup::new();
-        lookup.push(Item::new("foo"));
-        lookup.push(Item::new("bar"));
+        let mut named_vec = NamedVec::new();
+        named_vec.push(Item::new("foo"));
+        named_vec.push(Item::new("bar"));
 
-        let first_index = lookup.map.get("foo").unwrap().clone();
-        let second_index = lookup.map.get("bar").unwrap().clone();
+        let first_index = named_vec.map.get("foo").unwrap().clone();
+        let second_index = named_vec.map.get("bar").unwrap().clone();
         assert_eq!(first_index, 0);
         assert_eq!(second_index, 1);
     }
 
     #[test]
     fn equality_with_two_items() {
-        let mut first = Lookup::new();
+        let mut first = NamedVec::new();
         first.push(Item::new("foo"));
         first.push(Item::new("bar"));
 
-        let mut second = Lookup::new();
+        let mut second = NamedVec::new();
         second.push(Item::new("foo"));
         second.push(Item::new("bar"));
 
@@ -115,11 +115,11 @@ mod tests {
     #[test]
     #[should_panic]
     fn equality_with_two_different_items() {
-        let mut first = Lookup::new();
+        let mut first = NamedVec::new();
         first.push(Item::new("foo"));
         first.push(Item::new("bar"));
 
-        let mut second = Lookup::new();
+        let mut second = NamedVec::new();
         second.push(Item::new("foo"));
         second.push(Item::new("quux"));
 
@@ -128,11 +128,11 @@ mod tests {
 
     #[test]
     fn swap_two_items_by_index() {
-        let mut first = Lookup::new();
+        let mut first = NamedVec::new();
         first.push(Item::new("bar"));
         first.push(Item::new("foo"));
 
-        let mut second = Lookup::new();
+        let mut second = NamedVec::new();
         second.push(Item::new("foo"));
         second.push(Item::new("bar"));
 
@@ -143,20 +143,20 @@ mod tests {
     #[test]
     #[should_panic]
     fn swap_with_invalid_index() {
-        let mut lookup = Lookup::new();
-        lookup.push(Item::new("bar"));
-        lookup.push(Item::new("foo"));
+        let mut named_vec = NamedVec::new();
+        named_vec.push(Item::new("bar"));
+        named_vec.push(Item::new("foo"));
 
-        lookup.swap_by_index(0, 2);
+        named_vec.swap_by_index(0, 2);
     }
 
     #[test]
     fn swap_two_items_by_name() {
-        let mut first = Lookup::new();
+        let mut first = NamedVec::new();
         first.push(Item::new("bar"));
         first.push(Item::new("foo"));
 
-        let mut second = Lookup::new();
+        let mut second = NamedVec::new();
         second.push(Item::new("foo"));
         second.push(Item::new("bar"));
 
@@ -167,10 +167,10 @@ mod tests {
     #[test]
     #[should_panic]
     fn swap_with_invalid_name() {
-        let mut lookup = Lookup::new();
-        lookup.push(Item::new("bar"));
-        lookup.push(Item::new("foo"));
+        let mut named_vec = NamedVec::new();
+        named_vec.push(Item::new("bar"));
+        named_vec.push(Item::new("foo"));
 
-        lookup.swap_by_name("foo", "quux");
+        named_vec.swap_by_name("foo", "quux");
     }
 }

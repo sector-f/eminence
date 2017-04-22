@@ -1,5 +1,5 @@
 mod hash;
-pub mod lookup;
+pub mod named_vec;
 
 fn main() {
     println!("Hello, world!");
