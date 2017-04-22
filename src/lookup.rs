@@ -31,56 +31,28 @@ impl<T: Named> Lookup<T> {
         self.items.get(index)
     }
 
-    pub fn swap_by_index(&mut self, i1: usize, i2: usize) -> Result<(), String> {
-        // Avoid allocating the String unless there's actually an error
-        fn invalid_index(i: usize) -> String {
-            format!("Invalid index: {}", i)
-        }
+    pub fn swap_by_index(&mut self, i1: usize, i2: usize) {
+        let old_s1 = self.items[i1].name().to_owned();
+        let old_s2 = self.items[i2].name().to_owned();
 
-        let old_s1 = match self.items.get(i1) {
-            Some(item) => { item.name().to_owned() },
-            None => { return Err(invalid_index(i1)) },
-        };
-
-        let old_s2 = match self.items.get(i2) {
-            Some(item) => { item.name().to_owned() },
-            None => { return Err(invalid_index(i2)) },
-        };
-
-        let old_i1 = self.map.get(&old_s1).unwrap().clone();
-        let old_i2 = self.map.get(&old_s2).unwrap().clone();
+        let old_i1 = self.map[&old_s1];
+        let old_i2 = self.map[&old_s2];
 
         self.map.insert(old_s1, old_i2);
         self.map.insert(old_s2, old_i1);
         self.items.swap(i1, i2);
-
-        Ok(())
     }
 
-    pub fn swap_by_name(&mut self, s1: &str, s2: &str) -> Result<(), String> {
-        // Avoid allocating the String unless there's actually an error
-        fn invalid_name(s: &str) -> String {
-            format!("Invalid name: {}", s)
-        }
+    pub fn swap_by_name(&mut self, s1: &str, s2: &str) {
+        let old_i1 = self.map[s1];
+        let old_i2 = self.map[s2];
 
-        let old_i1 = match self.map.get(s1) {
-            Some(index) => { index.clone() }
-            None => { return Err(invalid_name(&s1)) },
-        };
-
-        let old_i2 = match self.map.get(s2) {
-            Some(index) => { index.clone() }
-            None => { return Err(invalid_name(&s1)) },
-        };
-
-        let old_s1 = self.items.get(old_i1).unwrap().name().to_owned();
-        let old_s2 = self.items.get(old_i2).unwrap().name().to_owned();
+        let old_s1 = self.items[old_i1].name().to_owned();
+        let old_s2 = self.items[old_i2].name().to_owned();
 
         self.map.insert(old_s1, old_i2);
         self.map.insert(old_s2, old_i1);
         self.items.swap(old_i1, old_i2);
-
-        Ok(())
     }
 
     pub fn len(&self) -> usize {
@@ -164,17 +136,18 @@ mod tests {
         second.push(Item::new("foo"));
         second.push(Item::new("bar"));
 
-        first.swap_by_index(0, 1).unwrap();
+        first.swap_by_index(0, 1);
         assert_eq!(first, second);
     }
 
     #[test]
+    #[should_panic]
     fn swap_with_invalid_index() {
         let mut lookup = Lookup::new();
         lookup.push(Item::new("bar"));
         lookup.push(Item::new("foo"));
 
-        assert!(lookup.swap_by_index(0, 2).is_err());
+        lookup.swap_by_index(0, 2);
     }
 
     #[test]
@@ -187,7 +160,17 @@ mod tests {
         second.push(Item::new("foo"));
         second.push(Item::new("bar"));
 
-        first.swap_by_name("foo", "bar").unwrap();
+        first.swap_by_name("foo", "bar");
         assert_eq!(first, second);
+    }
+
+    #[test]
+    #[should_panic]
+    fn swap_with_invalid_name() {
+        let mut lookup = Lookup::new();
+        lookup.push(Item::new("bar"));
+        lookup.push(Item::new("foo"));
+
+        lookup.swap_by_name("foo", "quux");
     }
 }
