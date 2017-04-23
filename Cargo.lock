@@ -1,4 +1,14 @@
 [root]
 name = "eminence"
 version = "0.1.0"
+dependencies = [
+ "named-vec 0.1.0 (git+https://github.com/sector-f/named_vec.git)",
+]
 
+[[package]]
+name = "named-vec"
+version = "0.1.0"
+source = "git+https://github.com/sector-f/named_vec.git#ce59211ff700040e741deaa77832b421f7c04945"
+
+[metadata]
+"checksum named-vec 0.1.0 (git+https://github.com/sector-f/named_vec.git)" = "<none>"
